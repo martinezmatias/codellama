@@ -79,12 +79,13 @@ class Llama:
                 torch.distributed.init_process_group("gloo")
         if not model_parallel_is_initialized():
             if model_parallel_size is None:
+                checkpoints = sorted(Path(ckpt_dir).glob("*.pth"))
                 if int(os.environ.get("WORLD_SIZE", 1)) > 1 and pipeline_length > 1:
-                    # if user does not specify model_parallel_size and wants Pipeline parallelization (PP),
-                    # setting to  1 force to avoid the model parallelization
-                    model_parallel_size = 1
+                    # if user does not specify model_parallel_size and wants Pipeline parallelization (PP) when WORLD_SIZE > 1,
+                    # then, the model_parallel_size becomes the number of checkpoints to be parallelized.
+                    model_parallel_size = len(checkpoints)
                 else:
-                    model_parallel_size = int(os.environ.get("WORLD_SIZE", 1))
+                    model_parallel_size = int(os.environ.get("WORLD_SIZE", checkpoints))
             initialize_model_parallel(model_parallel_size_=model_parallel_size, pipeline_length=pipeline_length)
 
         local_rank = int(os.environ.get("LOCAL_RANK", 0))
