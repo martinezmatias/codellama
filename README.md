@@ -104,7 +104,7 @@ Fine-tuned instruction-following models are: the Code Llama - Instruct models `C
 Code Llama is a new technology that carries potential risks with use. Testing conducted to date has not — and could not — cover all scenarios.
 In order to help developers address these risks, we have created the [Responsible Use Guide](https://github.com/facebookresearch/llama/blob/main/Responsible-Use-Guide.pdf). More details can be found in our research papers as well.
 
-## Parallelization
+### Parallelization
 
 CodeLLama is built on top of [FairScale](https://github.com/facebookresearch/fairscale), a PyTorch extension library that extends and new SOTA scaling techniques.
 As explained in [Inference section](#Inference), CodeLlama requires model-parallelization (MP) for CodeLlama-13B and CodeLlama-3B.
@@ -112,7 +112,7 @@ CodeLlama also supports other parallelization mechanisms provided by FairScale, 
 
 
 
-## Pipeline parallelism (PP)
+#### Pipeline parallelism (PP)
 
 Examples using `CodeLlama-7b-Instruct` on two GPUs using PP:
 ```
@@ -122,7 +122,7 @@ torchrun --nproc_per_node 2 example_instructions.py \
     --max_seq_len 512 --max_batch_size 4 --pipeline_length 2
 ```
 
-## Distributed Data Parallelism
+#### Distributed Data Parallelism
 
 DDP is executed automatically when the number of GPUs available (indicated via `--nproc_per_node`) is larger than the GPUs required by the model (see [Inference section](#Inference)).
 
@@ -144,7 +144,7 @@ data_parallel_size = # GPUs (--nproc_per_node) / (model_parallel_size * pipeline
 By default, `pipeline_length` is 1 (i.e., PP is disable).
 
 
-## Combining DDP and PP
+#### Combining DDP and PP Parallelism
 
 Example using `CodeLlama-7b-Instruct` on four GPUs using DDP and PP:
 
