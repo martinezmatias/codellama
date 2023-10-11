@@ -107,7 +107,7 @@ In order to help developers address these risks, we have created the [Responsibl
 ### Parallelization
 
 CodeLLama is built on top of [FairScale](https://github.com/facebookresearch/fairscale), a PyTorch extension library that extends and new SOTA scaling techniques.
-As explained in [Inference section](#Inference), CodeLlama requires model-parallelization (MP) for CodeLlama-13B and CodeLlama-3B.
+As explained in [Inference section](#Inference), CodeLlama requires model-parallelization (MP) for CodeLlama-13B and CodeLlama-34B.
 CodeLlama also supports other parallelization mechanisms provided by FairScale, notably, [Pipeline Parallelism (PP)](https://fairscale.readthedocs.io/en/latest/deep_dive/pipeline_parallelism.html) and Distributed Data Parallelism (DDP).
 
 
@@ -122,7 +122,7 @@ torchrun --nproc_per_node 2 example_instructions.py \
     --max_seq_len 512 --max_batch_size 4 --pipeline_length 2
 ```
 
-#### Distributed Data Parallelism
+#### Distributed Data Parallelism (DDP)
 
 DDP is executed automatically when the number of GPUs available (indicated via `--nproc_per_node`) is larger than the GPUs required by the model (see [Inference section](#Inference)).
 
@@ -138,7 +138,7 @@ torchrun --nproc_per_node 2 example_instructions.py \
 FairScale computes the length of the data parallelism as follows:
 
 ```
-data_parallel_size = # GPUs (--nproc_per_node) / (model_parallel_size * pipeline_length))
+data_parallel_size = #GPUs / (model_parallel_size * pipeline_length))
 ```
 
 By default, `pipeline_length` is 1 (i.e., PP is disable).
