@@ -80,15 +80,11 @@ class Llama:
         if not model_parallel_is_initialized():
             if model_parallel_size is None:
                 checkpoints = sorted(Path(ckpt_dir).glob("*.pth"))
-                #if int(os.environ.get("WORLD_SIZE", 1)) > 1: #and pipeline_length > 1:
-                #    # if user does not specify model_parallel_size and wants Pipeline parallelization (PP) when WORLD_SIZE > 1,
-                    # then, the model_parallel_size becomes the number of checkpoints to be parallelized.
-                assert len(checkpoints) <= int(os.environ.get("WORLD_SIZE",
-                                                              1)), f"Loading a checkpoint for MP={len(checkpoints)} but world size is {model_parallel_size}"
-
                 model_parallel_size = len(checkpoints)
-                #else:
-                #    model_parallel_size = int(os.environ.get("WORLD_SIZE", checkpoints))
+                world_size = int(os.environ.get("WORLD_SIZE", 1))
+                assert model_parallel_size <= world_size, f"Loading a checkpoint for MP={model_parallel_size} but world size is {world_size}"
+                assert (model_parallel_size * pipeline_length) <= world_size, f"Requited ={(model_parallel_size * pipeline_length)} but world size is {world_size}"
+
             initialize_model_parallel(model_parallel_size_=model_parallel_size, pipeline_length=pipeline_length)
 
         local_rank = int(os.environ.get("LOCAL_RANK", 0))
