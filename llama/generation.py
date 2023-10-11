@@ -83,6 +83,9 @@ class Llama:
                 #if int(os.environ.get("WORLD_SIZE", 1)) > 1: #and pipeline_length > 1:
                 #    # if user does not specify model_parallel_size and wants Pipeline parallelization (PP) when WORLD_SIZE > 1,
                     # then, the model_parallel_size becomes the number of checkpoints to be parallelized.
+                assert len(checkpoints) <= int(os.environ.get("WORLD_SIZE",
+                                                              1)), f"Loading a checkpoint for MP={len(checkpoints)} but world size is {model_parallel_size}"
+
                 model_parallel_size = len(checkpoints)
                 #else:
                 #    model_parallel_size = int(os.environ.get("WORLD_SIZE", checkpoints))
@@ -100,7 +103,6 @@ class Llama:
 
         start_time = time.time()
         checkpoints = sorted(Path(ckpt_dir).glob("*.pth"))
-        assert  len(checkpoints) <= int(os.environ.get("WORLD_SIZE", 1)),  f"Loading a checkpoint for MP={len(checkpoints)} but world size is {model_parallel_size}"
         assert len(checkpoints) > 0, f"no checkpoint files found in {ckpt_dir}"
         assert model_parallel_size == len(
             checkpoints
