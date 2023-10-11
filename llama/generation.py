@@ -69,6 +69,7 @@ class Llama:
         tokenizer_path: str,
         max_seq_len: int,
         max_batch_size: int,
+        pipeline_length: int = 1,
         model_parallel_size: Optional[int] = None,
     ) -> "Llama":
         if not torch.distributed.is_initialized():
@@ -78,8 +79,13 @@ class Llama:
                 torch.distributed.init_process_group("gloo")
         if not model_parallel_is_initialized():
             if model_parallel_size is None:
-                model_parallel_size = int(os.environ.get("WORLD_SIZE", 1))
-            initialize_model_parallel(model_parallel_size)
+                if int(os.environ.get("WORLD_SIZE", 1)) > 1 and pipeline_length > 1:
+                    # if user does not specify model_parallel_size and wants Pipeline parallelization (PP),
+                    # setting to  1 force to avoid the model parallelization
+                    model_parallel_size = 1
+                else:
+                    model_parallel_size = int(os.environ.get("WORLD_SIZE", 1))
+            initialize_model_parallel(model_parallel_size_=model_parallel_size, pipeline_length=pipeline_length)
 
         local_rank = int(os.environ.get("LOCAL_RANK", 0))
         if device == "cuda":
