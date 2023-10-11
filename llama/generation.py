@@ -83,7 +83,7 @@ class Llama:
                 model_parallel_size = len(checkpoints)
                 world_size = int(os.environ.get("WORLD_SIZE", 1))
                 assert model_parallel_size <= world_size, f"Loading a checkpoint for MP={model_parallel_size} but world size is {world_size}"
-                assert (model_parallel_size * pipeline_length) <= world_size, f"Requited ={(model_parallel_size * pipeline_length)} but world size is {world_size}"
+                assert (model_parallel_size * pipeline_length) <= world_size, f"Requited world size >= {(model_parallel_size * pipeline_length)} but world size is {world_size}"
 
             initialize_model_parallel(model_parallel_size_=model_parallel_size, pipeline_length=pipeline_length)
 
