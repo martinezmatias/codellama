@@ -366,6 +366,8 @@ class Llama:
 
             print(f"Index EOS {self.tokenizer.eos_id in ti}")
 
+            print(f"response {self.tokenizer.decode(ti)}")
+
 
         if logprobs:
             return [
