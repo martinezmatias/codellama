@@ -361,7 +361,7 @@ class Llama:
         for ti in generation_tokens:
             print("\\n tokens {}, {}".format(len(ti), ti))
 
-            print(f"Index EOS {ti.index(self.tokenizer.eos_id)}")
+            print(f"Index EOS {self.tokenizer.eos_id in ti}")
 
 
         if logprobs:
