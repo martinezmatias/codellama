@@ -355,6 +355,12 @@ class Llama:
             top_p=top_p,
             logprobs=logprobs,
         )
+        print("generation tokens\n {}".format(len(generation_tokens)))
+        print( f"eos_id: {self.tokenizer.eos_id}")
+        for ti in generation_tokens:
+            print("tokens {}, {}".format(len(ti), ti))
+
+
         if logprobs:
             return [
                 {
