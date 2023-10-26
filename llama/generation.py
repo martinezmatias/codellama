@@ -356,9 +356,12 @@ class Llama:
             logprobs=logprobs,
         )
         print("generation tokens\n {}".format(len(generation_tokens)))
+        print(f"Max length {max_gen_len}")
         print( f"eos_id: {self.tokenizer.eos_id}")
         for ti in generation_tokens:
-            print("tokens {}, {}".format(len(ti), ti))
+            print("\\n tokens {}, {}".format(len(ti), ti))
+
+            print(f"Index EOS {ti.index(self.tokenizer.eos_id)}")
 
 
         if logprobs:
