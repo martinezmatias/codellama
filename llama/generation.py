@@ -181,7 +181,7 @@ class Llama:
                 input_text_mask[:, cur_pos], tokens[:, cur_pos], next_token
             )
             tokens[:, cur_pos] = next_token
-            print(f"cur_pos {cur_pos}{total_len} {any((next_token == stop_token))} {(next_token == stop_token)}")
+            print(f"cur_pos {cur_pos}/{total_len} {any((next_token == stop_token))} {(next_token == stop_token)}")
             print(f"cur_pos {cur_pos}/{total_len} {any((next_token == stop_token))}  {next_token}")
 
             stop_reached |= (~input_text_mask[:, cur_pos]) & (next_token == stop_token)
@@ -363,6 +363,7 @@ class Llama:
         print( f"eos_id: {self.tokenizer.eos_id}")
         for ti in generation_tokens:
             print("\\n tokens {}, {}".format(len(ti), ti))
+            print("\\n tokens {}, {}".format(ti==self.tokenizer.eos_id))
 
             print(f"Index EOS {self.tokenizer.eos_id in ti}")
 
