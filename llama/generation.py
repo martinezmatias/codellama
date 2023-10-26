@@ -181,8 +181,10 @@ class Llama:
                 input_text_mask[:, cur_pos], tokens[:, cur_pos], next_token
             )
             tokens[:, cur_pos] = next_token
+            print(f"cur_pos {cur_pos} {(next_token == stop_token)}")
+            print(f"cur_pos {cur_pos} {next_token}")
 
-            print(f"cur_pos {cur_pos}  of {total_len}:  Is any stop_token {any((next_token == stop_token))}")
+            print(f"cur_pos {cur_pos}  of {total_len}:  Any stop_token {any((next_token == stop_token))}")
             stop_reached |= (~input_text_mask[:, cur_pos]) & (next_token == stop_token)
             prev_pos = cur_pos
             if all(stop_reached):
